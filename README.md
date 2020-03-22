@@ -1,7 +1,7 @@
 # RubiksCube
 A virtual model of a 3x3 Rubik's Cube
 
-Keys for turning the sides of cube: 
+Keys for turning the sides of cube:  
 r - turn right clockwise  
 l - turn left clockwise  
 u - turn top clockwise  
