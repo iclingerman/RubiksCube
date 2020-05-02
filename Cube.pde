@@ -1,10 +1,17 @@
-//A object for the cube //<>//
+    //A object for the cube //<>//
 import java.util.LinkedList;
+import java.util.ArrayList;
+
 class Cube {
   PVector center; //3D vector of the center of the cube
   int size; //size of the cube
   int sizeOfBlock; //the size of the blocks in the cube based on the cube size
   Block[][][] cube; //the 3D array of blocks that make the cube
+  
+  
+  //potentially keeping Array lists of all the sides (plus middles) in order to make the code for the turns more clean and potentially better future proof in case I add self solving abilities. 
+
+  ArrayList<Block> right, left, top, bottom, front, back, middle, edge;
 
   color WHITE = color(255);
   color RED = color(255, 0, 0);
@@ -66,11 +73,20 @@ class Cube {
           if(back) colors[3] = ORANGE;
           if(left) colors[4] = GREEN;
           if(right) colors[5] = BLUE;
-          //colors = new color[]{WHITE, YELLOW, RED, ORANGE, GREEN, BLUE};
           cube[i][j][k] = new Block(pos, sizeOfBlock, colors);
         }
       }
     }
+    
+    this.right = createRight();
+    this.left = createLeft();
+    this.top = createTop();
+    this.bottom = createBottom();
+    this.front = createFront();
+    this.back = createBack();
+    this.middle = createMiddle();
+    this.edge = createEdge();
+    
   }
 
   void display() {
@@ -83,6 +99,159 @@ class Cube {
     }
   }
   
+  ArrayList<Block> createRight(){
+    ArrayList<Block> rval = new ArrayList<Block>();
+    rval.add(getBlock("002"));
+    rval.add(getBlock("102"));
+    rval.add(getBlock("202"));
+    rval.add(getBlock("212"));
+    rval.add(getBlock("222"));
+    rval.add(getBlock("122"));
+    rval.add(getBlock("022"));
+    rval.add(getBlock("012"));
+    return rval;
+  }
+  
+  ArrayList<Block> createLeft(){
+    ArrayList<Block> rval = new ArrayList<Block>();
+    rval.add(getBlock("200"));
+    rval.add(getBlock("100"));
+    rval.add(getBlock("000"));
+    rval.add(getBlock("010"));
+    rval.add(getBlock("020"));
+    rval.add(getBlock("120"));
+    rval.add(getBlock("220"));
+    rval.add(getBlock("210"));
+    return rval;
+  }
+  
+  ArrayList<Block> createTop() {
+    ArrayList<Block> rval = new ArrayList<Block>();
+    rval.add(getBlock("200"));
+    rval.add(getBlock("201"));
+    rval.add(getBlock("202"));
+    rval.add(getBlock("102"));
+    rval.add(getBlock("002"));
+    rval.add(getBlock("001"));
+    rval.add(getBlock("000"));
+    rval.add(getBlock("100"));
+    return rval;
+  }
+  
+  ArrayList<Block> createBottom() {
+    ArrayList<Block> rval = new ArrayList<Block>();
+    rval.add(getBlock("020"));
+    rval.add(getBlock("021"));
+    rval.add(getBlock("022"));
+    rval.add(getBlock("122"));
+    rval.add(getBlock("222"));
+    rval.add(getBlock("221"));
+    rval.add(getBlock("220"));
+    rval.add(getBlock("120"));
+    return rval;
+  }
+  
+  ArrayList<Block> createFront() {
+    ArrayList<Block> rval = new ArrayList<Block>();
+    rval.add(getBlock("000"));
+    rval.add(getBlock("001"));
+    rval.add(getBlock("002"));
+    rval.add(getBlock("012"));
+    rval.add(getBlock("022"));
+    rval.add(getBlock("021"));
+    rval.add(getBlock("020"));
+    rval.add(getBlock("010"));
+    return rval;
+  }
+  
+  ArrayList<Block> createBack(){
+    ArrayList<Block> rval = new ArrayList<Block>();
+    rval.add(getBlock("202"));
+    rval.add(getBlock("201"));
+    rval.add(getBlock("200"));
+    rval.add(getBlock("210"));
+    rval.add(getBlock("220"));
+    rval.add(getBlock("221"));
+    rval.add(getBlock("222"));
+    rval.add(getBlock("212"));
+    return rval;
+  }
+  
+  ArrayList<Block> createMiddle() {
+    ArrayList<Block> rval = new ArrayList<Block>();
+    rval.add(getBlock("001"));
+    rval.add(getBlock("101"));
+    rval.add(getBlock("201"));
+    rval.add(getBlock("211"));
+    rval.add(getBlock("221"));
+    rval.add(getBlock("121"));
+    rval.add(getBlock("021"));
+    rval.add(getBlock("011"));
+    return rval;
+ }
+ 
+  ArrayList<Block> createEdge() {
+    ArrayList<Block> rval = new ArrayList<Block>();
+    rval.add(getBlock("210"));
+    rval.add(getBlock("211"));
+    rval.add(getBlock("212"));
+    rval.add(getBlock("112"));
+    rval.add(getBlock("012"));
+    rval.add(getBlock("011"));
+    rval.add(getBlock("010"));
+    rval.add(getBlock("110"));
+    return rval;
+  }
+  
+  void turn(char direction){
+    switch(Character.toLowerCase(direction)){
+    case 'r':
+      turn(direction, this.right);
+      break;
+    case 'l':
+      turn(direction, this.left);
+      break;
+    case 'u':
+      turn(direction, this.top);
+      break;
+    case 'd':
+      turn(direction, this.bottom);
+      break;
+    case 'f':
+      turn(direction, this.front);
+      break;
+    case 'b':
+      turn(direction, this.back);
+      break;
+    default:
+      println("ERROR, direction is not valid");
+    }
+  }
+  
+  void turn(char direction, ArrayList<Block> list){
+    LinkedList<Block> temp = new LinkedList<Block>();
+    for(int i = 0; i < list.size(); i++) {
+      temp.add(list.get(i).clone());
+    }
+    
+    if(!Character.isUpperCase(direction)){
+      println("Clockwise");
+      temp.add(0, temp.pollLast());
+      temp.add(0, temp.pollLast());
+    }else if(Character.isUpperCase(direction)){
+      println("Counter-Clockwise");
+      temp.add(temp.size()-1, temp.pollFirst());
+      temp.add(temp.size()-1, temp.pollFirst());
+    }
+    
+    for(int i = 0; i < list.size(); i++) {
+      list.get(i).setColors(temp.get(i).getColors());
+      list.get(i).turn(direction);
+    }
+    
+  }
+  
+  
   /**
    * This method turns the right side of the cube by taking the blocks on the side in order around the center and placing a clone of the block in a linked list. 
    * This linked list is then rotated around depending on the oritation of the rotation. Then the colors of the blocks rotated as well. Finally, the faces of the blocks are changed to match their new position. 
@@ -90,245 +259,7 @@ class Cube {
    *
    * @param the orientation of the turn. r = clockwise, R = counter-clockwise
    */
-  void turnRight(char direction){
-    print("Turing Right ");
-    LinkedList<Block> list = new LinkedList<Block>();
-    list.add(getBlock("002").clone());
-    list.add(getBlock("102").clone());
-    list.add(getBlock("202").clone());
-    list.add(getBlock("212").clone());
-    list.add(getBlock("222").clone());
-    list.add(getBlock("122").clone());
-    list.add(getBlock("022").clone());
-    list.add(getBlock("012").clone());
-    if(direction == 'r'){
-      println("Clockwise");
-      list.add(0, list.pollLast());
-      list.add(0, list.pollLast());
-    }else if(direction == 'R'){
-      println("Counter-Clockwise");
-      list.add(list.size()-1, list.pollFirst());
-      list.add(list.size()-1, list.pollFirst());
-    }
-    getBlock("002").setColors(list.get(0).getColors());
-    getBlock("102").setColors(list.get(1).getColors());
-    getBlock("202").setColors(list.get(2).getColors());
-    getBlock("212").setColors(list.get(3).getColors());
-    getBlock("222").setColors(list.get(4).getColors());
-    getBlock("122").setColors(list.get(5).getColors());
-    getBlock("022").setColors(list.get(6).getColors());
-    getBlock("012").setColors(list.get(7).getColors());
-
-    getBlock("002").turn(direction);
-    getBlock("102").turn(direction);
-    getBlock("202").turn(direction);
-    getBlock("212").turn(direction);
-    getBlock("222").turn(direction);
-    getBlock("122").turn(direction);
-    getBlock("022").turn(direction);
-    getBlock("012").turn(direction);
-  }
-  //TODO fix to use getBlock method for the rest of the turn methods
   
-  //This method turns the top in a similar method as described above
-  void turnTop(char direction){
-    print("Turing Top ");
-    LinkedList<Block> list = new LinkedList<Block>();
-    list.add(cube[2][0][0].clone());
-    list.add(cube[2][0][1].clone());
-    list.add(cube[2][0][2].clone());
-    list.add(cube[1][0][2].clone());
-    list.add(cube[0][0][2].clone());
-    list.add(cube[0][0][1].clone());
-    list.add(cube[0][0][0].clone());
-    list.add(cube[1][0][0].clone());
-    if(direction == 'u'){
-      println("Clockwise");
-      list.add(0, list.pollLast());
-      list.add(0, list.pollLast());
-    }else if(direction == 'U'){
-      println("Counter-Clockwise");
-      list.add(list.size()-1, list.pollFirst());
-      list.add(list.size()-1, list.pollFirst());      
-    }
-    cube[2][0][0].setColors(list.get(0).getColors());
-    cube[2][0][1].setColors(list.get(1).getColors());
-    cube[2][0][2].setColors(list.get(2).getColors());
-    cube[1][0][2].setColors(list.get(3).getColors());
-    cube[0][0][2].setColors(list.get(4).getColors());
-    cube[0][0][1].setColors(list.get(5).getColors());
-    cube[0][0][0].setColors(list.get(6).getColors());
-    cube[1][0][0].setColors(list.get(7).getColors());
-    
-    cube[2][0][0].turn(direction);
-    cube[2][0][1].turn(direction);
-    cube[2][0][2].turn(direction);
-    cube[1][0][2].turn(direction);
-    cube[0][0][2].turn(direction);
-    cube[0][0][1].turn(direction);
-    cube[0][0][0].turn(direction);
-    cube[1][0][0].turn(direction);
-  }
-  
-  //This method turns the front in a similar method as described above
-  void turnFront(char direction){
-    print("Turing Front ");
-    LinkedList<Block> list = new LinkedList<Block>();
-    list.add(cube[0][0][0].clone());
-    list.add(cube[0][0][1].clone());
-    list.add(cube[0][0][2].clone());
-    list.add(cube[0][1][2].clone());
-    list.add(cube[0][2][2].clone());
-    list.add(cube[0][2][1].clone());
-    list.add(cube[0][2][0].clone());
-    list.add(cube[0][1][0].clone());
-    if(direction == 'f'){
-      println("Clockwise");
-      list.add(0, list.pollLast());
-      list.add(0, list.pollLast());
-    }else if(direction == 'F'){
-      println("Counter-Clockwise");
-      list.add(list.size()-1, list.pollFirst());
-      list.add(list.size()-1, list.pollFirst());      
-    }
-    cube[0][0][0].setColors(list.get(0).getColors());
-    cube[0][0][1].setColors(list.get(1).getColors());
-    cube[0][0][2].setColors(list.get(2).getColors());
-    cube[0][1][2].setColors(list.get(3).getColors());
-    cube[0][2][2].setColors(list.get(4).getColors());
-    cube[0][2][1].setColors(list.get(5).getColors());
-    cube[0][2][0].setColors(list.get(6).getColors());
-    cube[0][1][0].setColors(list.get(7).getColors());
-    
-    cube[0][0][0].turn(direction);
-    cube[0][0][1].turn(direction);
-    cube[0][0][2].turn(direction);
-    cube[0][1][2].turn(direction);
-    cube[0][2][2].turn(direction);
-    cube[0][2][1].turn(direction);
-    cube[0][2][0].turn(direction);
-    cube[0][1][0].turn(direction);
-  }
-  
-  //This method turns the back in a similar method as described above
-  void turnBack(char direction){
-    print("Turing Back ");
-    LinkedList<Block> list = new LinkedList<Block>();
-    list.add(cube[2][0][2].clone());
-    list.add(cube[2][0][1].clone());
-    list.add(cube[2][0][0].clone());
-    list.add(cube[2][1][0].clone());
-    list.add(cube[2][2][0].clone());
-    list.add(cube[2][2][1].clone());
-    list.add(cube[2][2][2].clone());
-    list.add(cube[2][1][2].clone());
-    if(direction == 'b'){
-      println("Clockwise");
-      list.add(0, list.pollLast());
-      list.add(0, list.pollLast());
-    }else if(direction == 'B'){
-      println("Counter-Clockwise");
-      list.add(list.size()-1, list.pollFirst());
-      list.add(list.size()-1, list.pollFirst());      
-    }
-    cube[2][0][2].setColors(list.get(0).getColors());
-    cube[2][0][1].setColors(list.get(1).getColors());
-    cube[2][0][0].setColors(list.get(2).getColors());
-    cube[2][1][0].setColors(list.get(3).getColors());
-    cube[2][2][0].setColors(list.get(4).getColors());
-    cube[2][2][1].setColors(list.get(5).getColors());
-    cube[2][2][2].setColors(list.get(6).getColors());
-    cube[2][1][2].setColors(list.get(7).getColors());
-    
-    cube[2][0][2].turn(direction);
-    cube[2][0][1].turn(direction);
-    cube[2][0][0].turn(direction);
-    cube[2][1][0].turn(direction);
-    cube[2][2][0].turn(direction);
-    cube[2][2][1].turn(direction);
-    cube[2][2][2].turn(direction);
-    cube[2][1][2].turn(direction);
-  }
-  
-  //This method turns the bottom in a similar method as described above
-  void turnBottom(char direction){
-    print("Turing Bottom ");
-    LinkedList<Block> list = new LinkedList<Block>();
-    list.add(cube[0][2][0].clone());
-    list.add(cube[0][2][1].clone());
-    list.add(cube[0][2][2].clone());
-    list.add(cube[1][2][2].clone());
-    list.add(cube[2][2][2].clone());
-    list.add(cube[2][2][1].clone());
-    list.add(cube[2][2][0].clone());
-    list.add(cube[1][2][0].clone());
-    if(direction == 'd'){
-      println("Clockwise");
-      list.add(0, list.pollLast());
-      list.add(0, list.pollLast());
-    }else if(direction == 'D'){
-      println("Counter-Clockwise");
-      list.add(list.size()-1, list.pollFirst());
-      list.add(list.size()-1, list.pollFirst());      
-    }
-    cube[0][2][0].setColors(list.get(0).getColors());
-    cube[0][2][1].setColors(list.get(1).getColors());
-    cube[0][2][2].setColors(list.get(2).getColors());
-    cube[1][2][2].setColors(list.get(3).getColors());
-    cube[2][2][2].setColors(list.get(4).getColors());
-    cube[2][2][1].setColors(list.get(5).getColors());
-    cube[2][2][0].setColors(list.get(6).getColors());
-    cube[1][2][0].setColors(list.get(7).getColors());
-    
-    cube[0][2][0].turn(direction);
-    cube[0][2][1].turn(direction);
-    cube[0][2][2].turn(direction);
-    cube[1][2][2].turn(direction);
-    cube[2][2][2].turn(direction);
-    cube[2][2][1].turn(direction);
-    cube[2][2][0].turn(direction);
-    cube[1][2][0].turn(direction);
-  }
-  
-  //This method turns the left in a similar method as described above
-  void turnLeft(char direction) {
-    print("Turing Left ");
-    LinkedList<Block> list = new LinkedList<Block>();
-    list.add(cube[2][0][0].clone());
-    list.add(cube[1][0][0].clone());
-    list.add(cube[0][0][0].clone());
-    list.add(cube[0][1][0].clone());
-    list.add(cube[0][2][0].clone());
-    list.add(cube[1][2][0].clone());
-    list.add(cube[2][2][0].clone());
-    list.add(cube[2][1][0].clone());
-    if(direction == 'l'){
-      println("Clockwise");
-      list.add(0, list.pollLast());
-      list.add(0, list.pollLast());
-    }else if(direction == 'L'){
-      println("Counter-Clockwise");
-      list.add(list.size()-1, list.pollFirst());
-      list.add(list.size()-1, list.pollFirst());      
-    }
-    cube[2][0][0].setColors(list.get(0).getColors());
-    cube[1][0][0].setColors(list.get(1).getColors());
-    cube[0][0][0].setColors(list.get(2).getColors());
-    cube[0][1][0].setColors(list.get(3).getColors());
-    cube[0][2][0].setColors(list.get(4).getColors());
-    cube[1][2][0].setColors(list.get(5).getColors());
-    cube[2][2][0].setColors(list.get(6).getColors());
-    cube[2][1][0].setColors(list.get(7).getColors());
-    
-    cube[2][0][0].turn(direction);
-    cube[1][0][0].turn(direction);
-    cube[0][0][0].turn(direction);
-    cube[0][1][0].turn(direction);
-    cube[0][2][0].turn(direction);
-    cube[1][2][0].turn(direction);
-    cube[2][2][0].turn(direction);
-    cube[2][1][0].turn(direction);
-  }
   
   //This method rotates the right side of the cube for the animation of the turn by rotating just the blocks the right side by the given rotation degree of the cube before displaying them and then the rest of the cube
   void rotateCubeRight(float radians){
@@ -457,6 +388,48 @@ class Cube {
     popMatrix();
   }
   
+  //This method rotates the whole cube either in the x or y directions using a similar method of turns as the individual direction turns but for the whole cube
+  void turnWholeCube(int direction){
+    switch(direction){
+    case UP:
+      //Right
+      this.turn('r', this.right);
+      this.turn('r', this.middle);
+      this.turn('L', this.left);
+      break;
+    case DOWN:
+      //Right
+      this.turn('R', this.right);
+      this.turn('R', this.middle);
+      this.turn('l', this.left);
+      break;
+    case RIGHT:
+      //top
+      this.turn('U', this.top);
+      this.turn('U', this.edge);
+      this.turn('d', this.bottom);
+      break;
+    case LEFT:
+      this.turn('u', this.top);
+      this.turn('u', this.edge);
+      this.turn('D', this.bottom);
+      break;
+    }
+  }
+  
+  void rotateHorizontal(float radians){
+    pushMatrix();
+    rotateY(radians);
+    display();
+    popMatrix();
+  }
+  
+  void rotateVertical(float radians){
+    pushMatrix();
+    rotateX(radians);
+    display();
+    popMatrix();
+  }
   
   //This method returns the block at the 3 number code given as a string, between 000 and 222 (zyx)
   Block getBlock(String codeString){

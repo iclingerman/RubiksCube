@@ -1,3 +1,6 @@
+import java.util.Scanner;
+Scanner scan;
+
 Cube cube;
 PVector pos;
 int size;
@@ -12,7 +15,7 @@ char animationDirection;
 double rotationSpeed;
 
 void setup() {
-  size(1600, 750, P3D);
+  size(800, 750, P3D);
   size = 100;
   cubeSize = size*3;
   pos = new PVector(width/2, height/2, 0);
@@ -23,6 +26,8 @@ void setup() {
   rotateAnimation = false;
   animationDirection = '-';
   rotationSpeed = radians(10);
+  strokeWeight(7);
+  scan = new Scanner(System.in);
 }
 
 void draw() {
@@ -47,7 +52,8 @@ void draw() {
       cube.rotateCubeRight(rotationDegree);
       rotationDegree += rotationSpeed;
     }else{
-      cube.turnRight('r');
+      //cube.turnRight('r');
+      cube.turn('r');
       rotationDegree = 0;
       cube.display();
       rotateAnimation = false;
@@ -59,7 +65,8 @@ void draw() {
       cube.rotateCubeRight(rotationDegree);
       rotationDegree -= rotationSpeed;
     }else{
-      cube.turnRight('R');
+      //cube.turnRight('R');
+      cube.turn('R');
       rotationDegree = 0;
       cube.display();
       rotateAnimation = false;
@@ -71,7 +78,8 @@ void draw() {
       cube.rotateCubeLeft(rotationDegree);
       rotationDegree -= rotationSpeed;
     }else{
-      cube.turnLeft('l');
+      //cube.turnLeft('l');
+      cube.turn('l');
       rotationDegree = 0;
       cube.display();
       rotateAnimation = false;
@@ -83,7 +91,8 @@ void draw() {
       cube.rotateCubeLeft(rotationDegree);
       rotationDegree += rotationSpeed;
     }else{
-      cube.turnLeft('L');
+      //cube.turnLeft('L');
+      cube.turn('L');
       rotationDegree = 0;
       cube.display();
       rotateAnimation = false;
@@ -95,7 +104,8 @@ void draw() {
       cube.rotateCubeUp(rotationDegree);
       rotationDegree -= rotationSpeed;
     }else{
-      cube.turnTop('u');
+      //cube.turnTop('u');
+      cube.turn('u');
       rotationDegree = 0;
       cube.display();
       rotateAnimation = false;
@@ -107,7 +117,8 @@ void draw() {
       cube.rotateCubeUp(rotationDegree);
       rotationDegree += rotationSpeed;
     }else{
-      cube.turnTop('U');
+      //cube.turnTop('U');
+      cube.turn('U');
       rotationDegree = 0;
       cube.display();
       rotateAnimation = false;
@@ -119,7 +130,8 @@ void draw() {
       cube.rotateCubeDown(rotationDegree);
       rotationDegree += rotationSpeed;
     }else{
-      cube.turnBottom('d');
+      //cube.turnBottom('d');
+      cube.turn('d');
       rotationDegree = 0;
       cube.display();
       rotateAnimation = false;
@@ -131,7 +143,8 @@ void draw() {
       cube.rotateCubeDown(rotationDegree);
       rotationDegree -= rotationSpeed;
     }else{
-      cube.turnBottom('D');
+      //cube.turnBottom('D');
+      cube.turn('D');
       rotationDegree = 0;
       cube.display();
       rotateAnimation = false;
@@ -143,7 +156,8 @@ void draw() {
       cube.rotateCubeFront(rotationDegree);
       rotationDegree += rotationSpeed;
     }else{
-      cube.turnFront('f');
+      //cube.turnFront('f');
+      cube.turn('f');
       rotationDegree = 0;
       cube.display();
       rotateAnimation = false;
@@ -155,7 +169,8 @@ void draw() {
       cube.rotateCubeFront(rotationDegree);
       rotationDegree -= rotationSpeed;
     }else{
-      cube.turnFront('F');
+      //cube.turnFront('F');
+      cube.turn('F');
       rotationDegree = 0;
       cube.display();
       rotateAnimation = false;
@@ -167,7 +182,8 @@ void draw() {
       cube.rotateCubeBack(rotationDegree);
       rotationDegree -= rotationSpeed;
     }else{
-      cube.turnBack('b');
+      //cube.turnBack('b');
+      cube.turn('b');
       rotationDegree = 0;
       cube.display();
       rotateAnimation = false;
@@ -179,13 +195,62 @@ void draw() {
       cube.rotateCubeBack(rotationDegree);
       rotationDegree += rotationSpeed;
     }else{
-      cube.turnBack('B');
+      //cube.turnBack('B');
+      cube.turn('B');
       rotationDegree = 0;
       cube.display();
       rotateAnimation = false;
       animationDirection = '-';
     }
     break;
+   case 'x':
+     if(rotationDegree < PI/2){
+      cube.rotateVertical(rotationDegree);
+      rotationDegree += rotationSpeed;
+    }else{
+      cube.turnWholeCube(UP);
+      rotationDegree = 0;
+      cube.display();
+      rotateAnimation = false;
+      animationDirection = '-';
+    }
+     break;
+   case 'X':
+     if(rotationDegree > -PI/2){
+      cube.rotateVertical(rotationDegree);
+      rotationDegree -= rotationSpeed;
+    }else{
+      cube.turnWholeCube(DOWN);
+      rotationDegree = 0;
+      cube.display();
+      rotateAnimation = false;
+      animationDirection = '-';
+    }
+     break;
+   case 'y':
+     if(rotationDegree > -PI/2){
+      cube.rotateHorizontal(rotationDegree);
+      rotationDegree -= rotationSpeed;
+    }else{
+      cube.turnWholeCube(LEFT);
+      rotationDegree = 0;
+      cube.display();
+      rotateAnimation = false;
+      animationDirection = '-';
+    }
+     break;
+   case 'Y':
+     if(rotationDegree < PI/2){
+      cube.rotateHorizontal(rotationDegree);
+      rotationDegree += rotationSpeed;
+    }else{
+      cube.turnWholeCube(RIGHT);
+      rotationDegree = 0;
+      cube.display();
+      rotateAnimation = false;
+      animationDirection = '-';
+    }
+     break;
   default:
     cube.display();  
   }
@@ -202,55 +267,54 @@ void keyPressed(){
         locked = true;
       }
     }else if(key == 'r'){
-      rotatingRight = true;
       rotateAnimation = true;
       animationDirection = 'r';
     }else if(key =='R'){
-      rotatingRight = true;
       rotateAnimation = true;
       animationDirection = 'R';
     }else if(key == 'u'){
-      rotatingRight = true;
       rotateAnimation = true;
       animationDirection = 'u';
-    }else if(key == 'U' || key == 'k'){
-      rotatingRight = true;
+    }else if(key == 'U'){
       rotateAnimation = true;
       animationDirection = 'U';
     }else if(key == 'f'){
-      rotatingRight = true;
       rotateAnimation = true;
       animationDirection = 'f';
     }else if(key == 'F'){
-      rotatingRight = true;
       rotateAnimation = true;
       animationDirection = 'F';
     }else if(key == 'b'){
-      rotatingRight = true;
       rotateAnimation = true;
       animationDirection = 'b';
     }else if(key == 'B'){
-      rotatingRight = true;
       rotateAnimation = true;
       animationDirection = 'B';
     }else if(key == 'd'){
-      rotatingRight = true;
       rotateAnimation = true;
       animationDirection = 'd';
     }else if(key == 'D'){
-      rotatingRight = true;
       rotateAnimation = true;
       animationDirection = 'D';
     }else if(key == 'l'){
-      rotatingRight = true;
       rotateAnimation = true;
       animationDirection = 'l';
     }else if(key == 'L'){
-      rotatingRight = true;
       rotateAnimation = true;
       animationDirection = 'L';
+    }else if(keyCode == RIGHT || key == 'Y'){
+      rotateAnimation = true;
+      animationDirection = 'Y';
+    }else if(keyCode == LEFT || key == 'y'){
+      rotateAnimation = true;
+      animationDirection = 'y';
+    }else if(keyCode == UP || key == 'x'){
+      rotateAnimation = true;
+      animationDirection = 'x';
+    }else if(keyCode == DOWN || key == 'X'){
+      rotateAnimation = true;
+      animationDirection = 'X';
     }
-    
     
     if(key == '0'){
       cube = new Cube(pos, cubeSize);
