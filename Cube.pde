@@ -11,7 +11,9 @@ class Cube {
   
   //potentially keeping Array lists of all the sides (plus middles) in order to make the code for the turns more clean and potentially better future proof in case I add self solving abilities. 
 
-  ArrayList<Block> right, left, top, bottom, front, back, middle, edge;
+  ArrayList<Block> right, left, top, bottom, front, back, middle, edge; 
+  
+  ArrayList<Block> topCross, middleEdges, bottomCross; //all of the possible edges
 
   color WHITE = color(255);
   color RED = color(255, 0, 0);
@@ -87,12 +89,17 @@ class Cube {
     this.middle = createMiddle();
     this.edge = createEdge();
     
+    this.topCross = createTopCross();
+    this.middleEdges = createMiddleEdges();
+    this.bottomCross = createBottomCross();
+    
   }
 
   void display() {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
         for (int k = 0; k < 3; k++) {
+          //if(i == 0 && j == 2 && k == 1) break;
           cube[i][j][k].display();
         }
       }
@@ -109,6 +116,8 @@ class Cube {
     rval.add(getBlock("122"));
     rval.add(getBlock("022"));
     rval.add(getBlock("012"));
+    //keeping the middle block at the back of the list so it can still be roated in the animation, but not affect the turns as it does not move in the turns
+    rval.add(getBlock("112"));
     return rval;
   }
   
@@ -122,6 +131,8 @@ class Cube {
     rval.add(getBlock("120"));
     rval.add(getBlock("220"));
     rval.add(getBlock("210"));
+    
+    rval.add(getBlock("110")); //middle of left
     return rval;
   }
   
@@ -135,6 +146,8 @@ class Cube {
     rval.add(getBlock("001"));
     rval.add(getBlock("000"));
     rval.add(getBlock("100"));
+    
+    rval.add(getBlock("101")); //middle of top
     return rval;
   }
   
@@ -148,6 +161,8 @@ class Cube {
     rval.add(getBlock("221"));
     rval.add(getBlock("220"));
     rval.add(getBlock("120"));
+    
+    rval.add(getBlock("121")); //middle of bottom
     return rval;
   }
   
@@ -161,6 +176,8 @@ class Cube {
     rval.add(getBlock("021"));
     rval.add(getBlock("020"));
     rval.add(getBlock("010"));
+    
+    rval.add(getBlock("011")); //middle of front
     return rval;
   }
   
@@ -174,6 +191,8 @@ class Cube {
     rval.add(getBlock("221"));
     rval.add(getBlock("222"));
     rval.add(getBlock("212"));
+    
+    rval.add(getBlock("211")); //midd of the back
     return rval;
   }
   
@@ -187,6 +206,8 @@ class Cube {
     rval.add(getBlock("121"));
     rval.add(getBlock("021"));
     rval.add(getBlock("011"));
+    
+    rval.add(getBlock("111")); //center block
     return rval;
  }
  
@@ -200,6 +221,35 @@ class Cube {
     rval.add(getBlock("011"));
     rval.add(getBlock("010"));
     rval.add(getBlock("110"));
+    
+    rval.add(getBlock("111")); //center block
+    return rval;
+  }
+  
+  ArrayList<Block> createTopCross() {
+    ArrayList<Block> rval = new ArrayList<Block>();
+    rval.add(getBlock("001")); //TF
+    rval.add(getBlock("100")); //TL
+    rval.add(getBlock("201")); //TB
+    rval.add(getBlock("102")); //TR
+    return rval;
+  }
+  
+  ArrayList<Block> createMiddleEdges() {
+    ArrayList<Block> rval = new ArrayList<Block>();
+    rval.add(getBlock("010")); //FL
+    rval.add(getBlock("210")); //BL
+    rval.add(getBlock("212")); //BR
+    rval.add(getBlock("012")); //FR
+    return rval;
+  }
+  
+  ArrayList<Block> createBottomCross() {
+    ArrayList<Block> rval = new ArrayList<Block>();
+    rval.add(getBlock("021")); //DF
+    rval.add(getBlock("120")); //DL
+    rval.add(getBlock("221")); //DB
+    rval.add(getBlock("122")); //DR
     return rval;
   }
   
@@ -230,21 +280,21 @@ class Cube {
   
   void turn(char direction, ArrayList<Block> list){
     LinkedList<Block> temp = new LinkedList<Block>();
-    for(int i = 0; i < list.size(); i++) {
+    for(int i = 0; i < list.size()-1; i++) {
       temp.add(list.get(i).clone());
     }
-    
+    println(direction);
     if(!Character.isUpperCase(direction)){
-      println("Clockwise");
+      //println("Clockwise");
       temp.add(0, temp.pollLast());
       temp.add(0, temp.pollLast());
     }else if(Character.isUpperCase(direction)){
-      println("Counter-Clockwise");
+      //println("Counter-Clockwise");
       temp.add(temp.size()-1, temp.pollFirst());
       temp.add(temp.size()-1, temp.pollFirst());
     }
     
-    for(int i = 0; i < list.size(); i++) {
+    for(int i = 0; i < temp.size(); i++) {
       list.get(i).setColors(temp.get(i).getColors());
       list.get(i).turn(direction);
     }
@@ -273,12 +323,8 @@ class Cube {
     }
     pushMatrix();
     rotateX(radians);
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 3; j++) {
-        for (int k = 2; k == 2; k++) {
-          cube[i][j][k].display();
-        }
-      }
+    for(int i = 0; i < right.size(); i++){
+      right.get(i).display();
     }
     popMatrix();
   }
@@ -294,12 +340,8 @@ class Cube {
     }
     pushMatrix();
     rotateX(radians);
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 3; j++) {
-        for (int k = 0; k == 0; k++) {
-          cube[i][j][k].display();
-        }
-      }
+    for(int i = 0; i < left.size(); i++){
+      left.get(i).display();
     }
     popMatrix();
   }
@@ -315,12 +357,8 @@ class Cube {
     }
     pushMatrix();
     rotateY(radians);
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j == 0; j++) {
-        for (int k = 0; k < 3; k++) {
-          cube[i][j][k].display();
-        }
-      }
+    for(int i = 0; i < top.size(); i++){
+      top.get(i).display();
     }
     popMatrix();
   }
@@ -336,12 +374,8 @@ class Cube {
     }
     pushMatrix();
     rotateY(radians);
-    for (int i = 0; i < 3; i++) {
-      for (int j = 2; j == 2; j++) {
-        for (int k = 0; k < 3; k++) {
-          cube[i][j][k].display();
-        }
-      }
+    for(int i = 0; i < bottom.size(); i++){
+      bottom.get(i).display();
     }
     popMatrix();
   }
@@ -357,12 +391,8 @@ class Cube {
     }
     pushMatrix();
     rotateZ(radians);
-    for (int i = 0; i == 0; i++) {
-      for (int j = 0; j < 3; j++) {
-        for (int k = 0; k < 3; k++) {
-          cube[i][j][k].display();
-        }
-      }
+    for(int i = 0; i < front.size(); i++){
+      front.get(i).display();
     }
     popMatrix();
   }
@@ -378,12 +408,8 @@ class Cube {
     }
     pushMatrix();
     rotateZ(radians);
-    for (int i = 2; i == 2; i++) {
-      for (int j = 0; j < 3; j++) {
-        for (int k = 0; k < 3; k++) {
-          cube[i][j][k].display();
-        }
-      }
+    for(int i = 0; i < back.size(); i++){
+      back.get(i).display();
     }
     popMatrix();
   }
@@ -441,4 +467,8 @@ class Cube {
     int z = code;
     return cube[z][y][x];
   }
+  
+  
+  
+  
 }

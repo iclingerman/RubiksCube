@@ -1,11 +1,18 @@
-import java.util.Scanner;
-Scanner scan;
+import java.util.LinkedList;
+
+import java.util.Arrays;
+
+LinkedList<Character> sequence;
 
 Cube cube;
+CubeAlgorithms CA;
 PVector pos;
 int size;
 int cubeSize;
 boolean locked; //whether or not the cube free rotation is locked
+
+boolean whiteCrossDone;
+
 
 //variables for the animation of the cube rotation
 boolean rotatingRight;
@@ -20,14 +27,19 @@ void setup() {
   cubeSize = size*3;
   pos = new PVector(width/2, height/2, 0);
   cube = new Cube(pos, cubeSize);
+  CA = new CubeAlgorithms();
   locked = true;
   rotatingRight = false;
   rotationDegree = 0;
   rotateAnimation = false;
   animationDirection = '-';
-  rotationSpeed = radians(10);
+  rotationSpeed = radians(20);
   strokeWeight(7);
-  scan = new Scanner(System.in);
+  sequence = new LinkedList<Character>();
+  randomizeCube(50);
+  println(sequence);
+  
+  whiteCrossDone = false;
 }
 
 void draw() {
@@ -45,7 +57,6 @@ void draw() {
     rotateX(-radians(30));
     rotateY(-radians(38));
   }
-
   switch(animationDirection){
   case 'r':
     if(rotationDegree < PI/2){
@@ -252,15 +263,25 @@ void draw() {
     }
      break;
   default:
-    cube.display();  
+    cube.display();
+    if(sequence.size() > 0){
+      turnSide(sequence.pollFirst());
+    }else{
+      rotationSpeed = radians(10);
+      //println(solver.checkWhiteCross());
+                                                                
+    }
   }
   
   popMatrix();
 }
 
 void keyPressed(){
-  if(!rotateAnimation){
-    if(key == '/') {
+  turnSide(key);
+}
+
+void turnSide(char key) {
+  if(key == '/') {
       if(locked){
         locked = false;
       }else{
@@ -316,10 +337,12 @@ void keyPressed(){
       animationDirection = 'X';
     }
     
+    if(key == ' ') {
+      solveCube();
+    }
     if(key == '0'){
       cube = new Cube(pos, cubeSize);
     }
-  }
 }
 
 //draws mouse position, fps and frame count to the top left corner of the screen
@@ -352,4 +375,154 @@ void drawKey() {
   text("/ - unlock free rotation", 0, 160);
   text("0 - reset cube", 0, 180);
   popMatrix();
+}
+
+void setSequence(LinkedList<Character> sequence){
+  this.sequence = sequence;
+}
+
+void addToSequence(LinkedList<Character> s){ 
+  for(int i = 0; i < s.size(); i++) {
+    this.sequence.add(s.get(i));
+  }
+}
+
+void randomizeCube(int numTurns) {
+  sequence = new LinkedList<Character>();
+  Character[] moves = new Character[] {'r', 'R', 'l', 'L', 'f', 'F', 'b', 'B', 'u', 'U', 'd', 'D'};
+  for(int i = 0; i < numTurns; i++){
+    int rand = int(random(moves.length));
+    sequence.add(moves[rand]);
+  }
+}
+
+
+  /*
+   * index 0 - top
+   * index 1 - bottom
+   * index 2 - front
+   * index 3 - back
+   * index 4 - left
+   * index 5 - right
+   */
+  //--------------------------------------------------------------------------------------------------------------------------------- Methods for solving the cube
+
+  color WHITE = color(255);
+  color RED = color(255, 0, 0);
+  color GREEN = color(25, 165, 84);
+  color BLUE = color(0, 0, 255);
+  color YELLOW = color(255, 255, 0);
+  color ORANGE = color(255, 165, 0);
+
+int numWhiteCrossDone = 0;
+void solveCube(){
+  //if(numWhiteCrossDone > 4) whiteCrossDone = true;
+  if(!whiteCrossDone){
+    whiteCross();
+  }
+    
+}
+
+void whiteCross() {
+  color middleColor = cube.getBlock("011").getColors()[2];
+  println("Solving White Cross");
+  for(int i = 0; i < cube.topCross.size(); i++) {
+    Block curr = cube.topCross.get(i);
+    if(i == 0){ //TF
+      if(curr.getTop() == WHITE && curr.getFront() == middleColor) {
+        println("TF (oriented Correctly)");
+        numWhiteCrossDone++;
+        println(numWhiteCrossDone);
+        if(numWhiteCrossDone < 4){
+          addToSequence(new LinkedList<Character>(Arrays.asList('y', ' ')));
+        }else {
+          addToSequence(new LinkedList<Character>(Arrays.asList('x', 'x', 'y')));
+          whiteCrossDone = true;
+        }
+        return;
+      }else if(curr.getFront() == WHITE && curr.getTop() == middleColor) {
+        println("TF (oriented Incorrectly)");
+        addToSequence(CA.orientTF());
+        addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+        return;
+      }
+    }else if(i == 1) { //TL
+      if((curr.getTop() == WHITE && curr.getLeft() == middleColor) || (curr.getTop() == middleColor && curr.getLeft() == WHITE)) {
+        addToSequence(CA.TLtoTF());
+        addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+        return;
+      }
+    }else if(i == 2) {
+      if((curr.getTop() == WHITE && curr.getBack() == middleColor) || (curr.getTop() == middleColor && curr.getBack() == WHITE)) {
+        addToSequence(CA.TBtoTF());
+        addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+        return;
+      }
+    }else if(i == 3) {
+      if((curr.getTop() == WHITE && curr.getRight() == middleColor) || (curr.getTop() == middleColor && curr.getRight() == WHITE)) {
+        addToSequence(CA.TRtoTF());
+        addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+        return;
+      }
+    }
+  }
+  
+  for(int i = 0; i < cube.middleEdges.size(); i++) {
+    Block curr = cube.middleEdges.get(i);
+    if(i == 0) {
+      if((curr.getFront() == WHITE && curr.getLeft() == middleColor) || (curr.getFront() == middleColor && curr.getLeft() == WHITE)) {
+        addToSequence(CA.FLtoTF());
+        addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+        return;
+      }
+    }else if(i == 1) {
+      if((curr.getBack() == WHITE && curr.getLeft() == middleColor) || (curr.getBack() == middleColor && curr.getLeft() == WHITE)) {
+        addToSequence(CA.BLtoTF());
+        addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+        return;
+      }
+    }else if(i == 2) {
+      if((curr.getBack() == WHITE && curr.getRight() == middleColor) || (curr.getBack() == middleColor && curr.getRight() == WHITE)) {
+        addToSequence(CA.BRtoTF());
+        addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+        return;
+      }
+    }else if(i == 3) {
+      if((curr.getFront() == WHITE && curr.getRight() == middleColor) || (curr.getFront() == middleColor && curr.getRight() == WHITE)) {
+        addToSequence(CA.FRtoTF());
+        addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+        return;
+      }
+    }
+  }
+  
+  for(int i = 0; i < cube.bottomCross.size(); i++) {
+    Block curr = cube.bottomCross.get(i);
+    if(i == 0) {
+      if((curr.getFront() == WHITE && curr.getBottom() == middleColor) || (curr.getFront() == middleColor && curr.getBottom() == WHITE)) {
+        addToSequence(CA.DFtoTF());
+        addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+        return;
+      }
+    }else if(i == 1) {
+      if((curr.getLeft() == WHITE && curr.getBottom() == middleColor) || (curr.getLeft() == middleColor && curr.getBottom() == WHITE)) {
+        addToSequence(CA.DLtoTF());
+        addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+        return;
+      }
+    }else if(i == 2) {
+      if((curr.getBack() == WHITE && curr.getBottom() == middleColor) || (curr.getBack() == middleColor && curr.getBottom() == WHITE)) {
+        addToSequence(CA.DBtoTF());
+        addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+        return;
+      }
+    }else if(i == 3) {
+      if((curr.getRight() == WHITE && curr.getBottom() == middleColor) || (curr.getRight() == middleColor && curr.getBottom() == WHITE)) {
+        addToSequence(CA.DRtoTF());
+        addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+        return;
+      }
+    }
+  }
+  
 }

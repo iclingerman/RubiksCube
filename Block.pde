@@ -2,7 +2,7 @@
 class Block {
   PVector pos; //position of the block on the screen
   int size; //size of the block
-
+  
   /*
    * index 0 - top
    * index 1 - bottom
@@ -23,6 +23,17 @@ class Block {
     for (int i = 0; i < colors.length; i++) { //draws each face of the block with the color array
         drawFace(i);
     }
+  }
+  
+  
+  void display(String text) {
+    for (int i = 0; i < colors.length; i++) { //draws each face of the block with the color array
+        drawFace(i);
+    }
+    pushMatrix();
+    translate(pos.x, pos.y, pos.z);
+    text(text, 0, 0);
+    popMatrix();
   }
 
   /**
@@ -210,4 +221,30 @@ class Block {
     this.size = newBlock.size;
     this.colors = newBlock.colors;
   }
+  
+  int getTop() {
+    return colors[0];
+  }
+  
+  int getBottom() {
+    return colors[1];
+  }
+  
+  int getFront() {
+    return colors[2];
+  }
+  
+  int getBack() {
+    return colors[3];
+  }
+  
+  int getLeft() {
+    return colors[4];
+  }
+  
+  int getRight() {
+    return colors[5];
+  }
+  
+  
 }
