@@ -2,7 +2,7 @@
 class Block {
   PVector pos; //position of the block on the screen
   int size; //size of the block
-  
+
   /*
    * index 0 - top
    * index 1 - bottom
@@ -21,14 +21,14 @@ class Block {
 
   void display() {
     for (int i = 0; i < colors.length; i++) { //draws each face of the block with the color array
-        drawFace(i);
+      drawFace(i);
     }
   }
-  
-  
+
+
   void display(String text) {
     for (int i = 0; i < colors.length; i++) { //draws each face of the block with the color array
-        drawFace(i);
+      drawFace(i);
     }
     pushMatrix();
     translate(pos.x, pos.y, pos.z);
@@ -130,14 +130,15 @@ class Block {
    * 
    * @param the direction that the block is turning
    */
-  void turn(char direction){
+  void turn(char direction) {
+    //println(direction);
     int top = colors[0];
     int bottom = colors[1];
     int front = colors[2];
     int back = colors[3];
     int left = colors[4];
     int right = colors[5];
-    switch(direction){
+    switch(direction) {
     case 'u':
       colors[2] = right;
       colors[3] = left;
@@ -210,10 +211,34 @@ class Block {
       colors[2] = top;
       colors[3] = bottom;
       break;
+    case 'm':
+      println("cube turning m clockwise");
+      colors[0] = back;
+      colors[1] = front;
+      colors[2] = top;
+      colors[3] = bottom;
+      break;
+    case 'M':
+      colors[0] = front;
+      colors[1] = back;
+      colors[2] = bottom;
+      colors[3] = top;
+      break;
+    case 'e':
+      colors[2] = left;
+      colors[3] = right;
+      colors[4] = back;
+      colors[5] = front;
+      break;
+    case 'E':
+      colors[2] = right;
+      colors[3] = left;
+      colors[4] = front;
+      colors[5] = back;
+      break;
     default:
       println("Invalid direction");
     }
-    
   }
 
   void setBlock(Block newBlock) {
@@ -221,30 +246,38 @@ class Block {
     this.size = newBlock.size;
     this.colors = newBlock.colors;
   }
-  
+
   int getTop() {
     return colors[0];
   }
-  
+
   int getBottom() {
     return colors[1];
   }
-  
+
   int getFront() {
     return colors[2];
   }
-  
+
   int getBack() {
     return colors[3];
   }
-  
+
   int getLeft() {
     return colors[4];
   }
-  
+
   int getRight() {
     return colors[5];
   }
-  
-  
+
+
+  boolean hasColor(color c) {
+    for (int i = 0; i < colors.length; i++) {
+      if (colors[i] == c) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
