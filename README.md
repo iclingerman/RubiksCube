@@ -21,3 +21,6 @@ The cube now supports animated whole cube turns using the arrow keys. Although f
 
 5/26/2020:  
 After the cube is created, it selects 50 random moves to randomize itself. By pressing space, the cube will start to solve itself. Currently, it only solves the white cross step. 
+
+6/13/2020:  
+The cube is now able to solve the first two layers of the rubiks using the CFOP F2L algorithms in most cases of the cube, there are some unlikely outliers not currently addressed. In addition, the method of determining the correct F2L algorithm is rather complication and will mostly likely be simplified in the future. 
