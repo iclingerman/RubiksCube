@@ -10,7 +10,7 @@ int size;
 int cubeSize;
 boolean locked; //whether or not the cube free rotation is locked
 
-boolean whiteCrossDone;
+int solveStep;
 
 
 //variables for the animation of the cube rotation
@@ -38,7 +38,7 @@ void setup() {
   randomizeCube(50);
   println(sequence);
 
-  whiteCrossDone = false;
+  solveStep = 0;
 }
 
 void draw() {
@@ -469,11 +469,13 @@ color ORANGE = color(255, 165, 0);
 int numWhiteCrossDone = 0;
 int numWhiteCornersDone = 0;
 void solveCube() {
-  //if(numWhiteCrossDone > 4) whiteCrossDone = true;
-  if (!whiteCrossDone) {
+  switch(solveStep) {
+  case 0: 
     whiteCross();
-  } else {
+    break;
+  case 1: 
     firstTwoLayers();
+    break;
   }
 }
 
@@ -490,8 +492,8 @@ void whiteCross() {
         if (numWhiteCrossDone < 4) {
           addToSequence(new LinkedList<Character>(Arrays.asList('y', ' ')));
         } else {
-          addToSequence(new LinkedList<Character>(Arrays.asList('x', 'x', 'y')));
-          whiteCrossDone = true;
+          addToSequence(new LinkedList<Character>(Arrays.asList('x', 'x', ' ')));
+          solveStep++;
         }
         return;
       } else if (curr.getFront() == WHITE && curr.getTop() == middleColor) {
@@ -595,8 +597,10 @@ void firstTwoLayers() {
           //in place
           println("in place and correctly oriented");
           numWhiteCornersDone++;
-          if(numWhiteCornersDone < 4) {
+          if (numWhiteCornersDone < 4) {
             addToSequence(new LinkedList<Character>(Arrays.asList('y', ' ')));
+          } else {
+            solveStep++;
           }
           return;
         } else {
