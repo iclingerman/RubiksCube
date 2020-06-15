@@ -340,7 +340,7 @@ class CubeAlgorithms {
 
   //Corner in top layer, white facing up
 
-  LinkedList<Character> whiteFacingUpOrientEdge() {
+  LinkedList<Character> whiteFacingUpOrientEdge() { //15
     LinkedList<Character> rval = new LinkedList<Character>();
     rval.add('r');
     rval.add('U');
@@ -356,7 +356,7 @@ class CubeAlgorithms {
     return rval;
   }
 
-  LinkedList<Character> whiteFacingUpEdgeTFRightColorUp() {
+  LinkedList<Character> whiteFacingUpEdgeTFRightColorUp() { //16
     LinkedList<Character> rval = new LinkedList<Character>();
     rval.add('Y');
     rval.add('R');
@@ -372,7 +372,7 @@ class CubeAlgorithms {
     return rval;
   }
 
-  LinkedList<Character> whiteFacingUpEdgeTFFrontColorUp() {
+  LinkedList<Character> whiteFacingUpEdgeTFFrontColorUp() { //17
     LinkedList<Character> rval = new LinkedList<Character>();
     rval.add('u');
     rval.add('u');
@@ -389,7 +389,7 @@ class CubeAlgorithms {
     return rval;
   }
 
-  LinkedList<Character> whiteFacingUpEdgeTLRightColorUp() {
+  LinkedList<Character> whiteFacingUpEdgeTLRightColorUp() { //18
     LinkedList<Character> rval = new LinkedList<Character>();
     //Dw'
     rval.add('D');
@@ -407,7 +407,7 @@ class CubeAlgorithms {
     return rval;
   }
 
-  LinkedList<Character> whiteFacingUpEdgeTLFrontColorUp() {
+  LinkedList<Character> whiteFacingUpEdgeTLFrontColorUp() { //19
     LinkedList<Character> rval = new LinkedList<Character>();
     rval.add('u');
     rval.add('u');
@@ -421,7 +421,7 @@ class CubeAlgorithms {
     return rval;
   }
 
-  LinkedList<Character> whiteFacingUpEdgeTRRightColorUp() {
+  LinkedList<Character> whiteFacingUpEdgeTRRightColorUp() { //21
     LinkedList<Character> rval = new LinkedList<Character>();
     rval.add('Y');
     rval.add('u');
@@ -441,7 +441,7 @@ class CubeAlgorithms {
     return rval;
   }
 
-  LinkedList<Character> whiteFacingUpEdgeTRFrontColorUp() {
+  LinkedList<Character> whiteFacingUpEdgeTRFrontColorUp() { //20
     LinkedList<Character> rval = new LinkedList<Character>();
     rval.add('r');
     rval.add('u');
@@ -454,7 +454,7 @@ class CubeAlgorithms {
     return rval;
   }
 
-  LinkedList<Character> whiteFacingUpEdgeTBRightColorUp() {
+  LinkedList<Character> whiteFacingUpEdgeTBRightColorUp() { //23
     LinkedList<Character> rval = new LinkedList<Character>();
     rval.add('F');
     rval.add('L');
@@ -465,7 +465,7 @@ class CubeAlgorithms {
     return rval;
   }
 
-  LinkedList<Character> whiteFacingUpEdgeTBFrontColorUp() {
+  LinkedList<Character> whiteFacingUpEdgeTBFrontColorUp() { //22
     LinkedList<Character> rval = new LinkedList<Character>();
     rval.add('u');
     rval.add('r');
@@ -482,77 +482,126 @@ class CubeAlgorithms {
 
   //Corner is top layer, white facing right
 
-  LinkedList<Character> whiteFacingRightOrientEdge() {
+  LinkedList<Character> whiteFacingRightOrientEdge() { //24
     return new LinkedList<Character>(Arrays.asList('d', 'e', 'R', 'U', 'r', 'D', 'E', 'r', 'u', 'R'));
   }
 
-  LinkedList<Character> whiteFacingRightEdgeTFRightColorUp() {
+  LinkedList<Character> whiteFacingRightEdgeTFRightColorUp() { //25
     return new LinkedList<Character>(Arrays.asList('D', 'E', 'L', 'u', 'l', 'Y'));
   }
 
-  LinkedList<Character> whiteFacingRightEdgeTFFrontColorUp() {
+  LinkedList<Character> whiteFacingRightEdgeTFFrontColorUp() { //26
     return new LinkedList<Character>(Arrays.asList('d', 'e', 'R', 'u', 'u', 'r', 'D', 'E', 'r', 'u', 'R'));
   }
 
-  LinkedList<Character> whiteFacingRightEdgeTLRightColorUp() {
+  LinkedList<Character> whiteFacingRightEdgeTLRightColorUp() { //27
     return new LinkedList<Character>(Arrays.asList('d', 'e', 'R', 'U', 'r', 'U', 'U', 'R', 'u', 'r', 'y'));
   }
 
-  LinkedList<Character> whiteFacingRightEdgeTLFrontColorUp() {
+  LinkedList<Character> whiteFacingRightEdgeTLFrontColorUp() { //28
     return new LinkedList<Character>(Arrays.asList('d', 'e', 'R', 'u', 'r', 'D', 'E', 'r', 'u', 'R'));
   }
 
-  LinkedList<Character> whiteFacingRightEdgeTRRightColorUp() {
+  LinkedList<Character> whiteFacingRightEdgeTRRightColorUp() { //30
     return new LinkedList<Character>(Arrays.asList('r', 'U', 'R', 'u', 'u', 'Y', 'R', 'U', 'r', 'y'));
   }
 
-  LinkedList<Character> whiteFacingRightEdgeTRFrontColorUp() {
+  LinkedList<Character> whiteFacingRightEdgeTRFrontColorUp() { //29
     return new LinkedList<Character>(Arrays.asList('U', 'r', 'U', 'R', 'u', 'r', 'u', 'R'));
   }
 
-  LinkedList<Character> whiteFacingRightEdgeTBRightColorUp() {
+  LinkedList<Character> whiteFacingRightEdgeTBRightColorUp() { //32
     return new LinkedList<Character>(Arrays.asList('d', 'e', 'R', 'u', 'u', 'r', 'U', 'U', 'R', 'u', 'r', 'y'));
   }
 
-  LinkedList<Character> whiteFacingRightEdgeTBFrontColorUp() {
+  LinkedList<Character> whiteFacingRightEdgeTBFrontColorUp() { //31
     return new LinkedList<Character>(Arrays.asList('r', 'u', 'R'));
   }
 
   // Corner in top layer, white facing front
 
-  LinkedList<Character> whiteFacingFrontOrientEdge() {
+  LinkedList<Character> whiteFacingFrontOrientEdge() { //33
     return new LinkedList<Character>(Arrays.asList('U', 'r', 'u', 'R', 'd', 'e', 'R', 'U', 'r', 'y'));
   }
 
-  LinkedList<Character> whiteFacingFrontEdgeTFRightColorUp() {
+  LinkedList<Character> whiteFacingFrontEdgeTFRightColorUp() { //34
     return new LinkedList<Character>(Arrays.asList('d', 'e', 'R', 'u', 'r', 'U', 'R', 'U', 'r', 'y'));
   }
 
-  LinkedList<Character> whiteFacingFrontEdgeTFFrontColorUp() {
+  LinkedList<Character> whiteFacingFrontEdgeTFFrontColorUp() { //35
     return new LinkedList<Character>(Arrays.asList('l', 'm', 'u', 'l', 'F', 'L', 'U', 'L', 'M'));
   }
 
-  LinkedList<Character> whiteFacingFrontEdgeTLRightColorUp() {
+  LinkedList<Character> whiteFacingFrontEdgeTLRightColorUp() { //36
     return new LinkedList<Character>(Arrays.asList('Y', 'R', 'U', 'r', 'y'));
   }
 
-  LinkedList<Character> whiteFacingFrontEdgeTLFrontColorUp() {
+  LinkedList<Character> whiteFacingFrontEdgeTLFrontColorUp() { //37
     return new LinkedList<Character>(Arrays.asList('U', 'r', 'U', 'U', 'R', 'u', 'u', 'r', 'U', 'R'));
   }
 
-  LinkedList<Character> whiteFacingFrontEdgeTRRightColorUp() {
+  LinkedList<Character> whiteFacingFrontEdgeTRRightColorUp() { //39
     return new LinkedList<Character>(Arrays.asList('U', 'r', 'U', 'U', 'R', 'd', 'e', 'R', 'U', 'r', 'y'));
   }
 
-  LinkedList<Character> whiteFacingFrontEdgeTRFrontColorUp() {
+  LinkedList<Character> whiteFacingFrontEdgeTRFrontColorUp() { //38
     return new LinkedList<Character>(Arrays.asList('u', 'r', 'U', 'R'));
   }
 
-  LinkedList<Character> whiteFacingFrontEdgeTBRightColorUp() {
+  LinkedList<Character> whiteFacingFrontEdgeTBRightColorUp() { //41
     return new LinkedList<Character>(Arrays.asList('U', 'r', 'U', 'R', 'd', 'e', 'R', 'U', 'r', 'y'));
   }
 
-  LinkedList<Character> whiteFacingFrontEdgeTBFrontColorUp() {
+  LinkedList<Character> whiteFacingFrontEdgeTBFrontColorUp() { //40
     return new LinkedList<Character>(Arrays.asList('U', 'r', 'u', 'R', 'u', 'u', 'r', 'U', 'R'));
   }
+  
+  //Algorithms for orienting bottom edges (2 look CFOP OLL)
+  //---------------------------------------------------------------------------------------------------
+  
+  LinkedList<Character> orientEdgesBar() {
+    return new LinkedList<Character>(Arrays.asList('f', 'r', 'u', 'R', 'U', 'F'));
+  }
+  
+  LinkedList<Character> orientEdgesL() {
+    return new LinkedList<Character>(Arrays.asList('f', 's', 'r', 'u', 'R', 'U', 'F', 'S'));
+  }
+  
+  LinkedList<Character> orientEdgesAll() {
+    return new LinkedList<Character>(Arrays.asList('f', 'r', 'u', 'R', 'U', 'F', 'f', 's', 'r', 'u', 'R', 'U', 'F', 'S'));
+  }
+  
+  //Algorithms for orienting bottom corners (2 look CFOP OLL)
+  //---------------------------------------------------------------------------------------------------
+  
+  LinkedList<Character> orientCornersHeadlights() {
+    return new LinkedList<Character>(Arrays.asList('r', 'r', 'd', 'R', 'u', 'u', 'r', 'D', 'R', 'u', 'u', 'R'));
+  }
+  
+  LinkedList<Character> orientCornersT() {
+    return new LinkedList<Character>(Arrays.asList('L', 'M', 'U', 'l', 'u', 'r', 'U', 'R', 'm', 'f'));
+  }
+  
+  LinkedList<Character> orientCornersBowtie() {
+    return new LinkedList<Character>(Arrays.asList('R', 'f', 'r', 'B', 'R', 'F', 'r', 'b'));
+  }
+  
+  LinkedList<Character> orientCornersSune() {
+    return new LinkedList<Character>(Arrays.asList('r', 'u', 'R', 'u', 'r', 'u', 'u', 'R'));
+  }
+  
+  LinkedList<Character> orientCornersAntisune() {
+    return new LinkedList<Character>(Arrays.asList('r', 'u', 'u', 'R', 'U', 'r', 'U', 'R'));
+  }
+  
+  LinkedList<Character> orientCornersPi() {
+    return new LinkedList<Character>(Arrays.asList('r', 'U', 'U', 'r', 'r', 'U', 'r', 'r', 'U', 'r', 'r', 'U', 'U', 'r'));
+  }
+  
+  LinkedList<Character> orientCornersH() {
+    return new LinkedList<Character>(Arrays.asList('r', 'u', 'u', 'R', 'U', 'r', 'u', 'R', 'U', 'r', 'U', 'R'));
+  }
+  
+  
+  
 }

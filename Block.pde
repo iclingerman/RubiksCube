@@ -212,7 +212,7 @@ class Block {
       colors[3] = bottom;
       break;
     case 'm':
-      println("cube turning m clockwise");
+      //println("cube turning m clockwise");
       colors[0] = back;
       colors[1] = front;
       colors[2] = top;
@@ -235,6 +235,18 @@ class Block {
       colors[3] = left;
       colors[4] = front;
       colors[5] = back;
+      break;
+    case 's':
+      colors[0] = left;
+      colors[1] = right;
+      colors[4] = bottom;
+      colors[5] = top;
+      break;
+    case 'S':
+      colors[0] = right;
+      colors[1] = left;
+      colors[4] = top;
+      colors[5] = bottom;
       break;
     default:
       println("Invalid direction");

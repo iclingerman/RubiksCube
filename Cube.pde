@@ -8,10 +8,7 @@ class Cube {
   int sizeOfBlock; //the size of the blocks in the cube based on the cube size
   Block[][][] cube; //the 3D array of blocks that make the cube
 
-
-  //potentially keeping Array lists of all the sides (plus middles) in order to make the code for the turns more clean and potentially better future proof in case I add self solving abilities. 
-
-  ArrayList<Block> right, left, top, bottom, front, back, middle, edge; 
+  ArrayList<Block> right, left, top, bottom, front, back, middle, edge, slice; 
 
   ArrayList<Block> topCross, middleEdges, bottomCross; //all of the possible edges
 
@@ -90,6 +87,7 @@ class Cube {
     this.back = createBack();
     this.middle = createMiddle();
     this.edge = createEdge();
+    this.slice = createSlice();
 
     this.topCross = createTopCross();
     this.middleEdges = createMiddleEdges();
@@ -229,6 +227,21 @@ class Cube {
     rval.add(getBlock("111")); //center block
     return rval;
   }
+  
+  ArrayList<Block> createSlice() {
+    ArrayList<Block> rval = new ArrayList<Block>();
+    rval.add(getBlock("100"));
+    rval.add(getBlock("101"));
+    rval.add(getBlock("102"));
+    rval.add(getBlock("112"));
+    rval.add(getBlock("122"));
+    rval.add(getBlock("121"));
+    rval.add(getBlock("120"));
+    rval.add(getBlock("110"));
+    
+    rval.add(getBlock("111")); //center block
+    return rval;
+  }
 
   ArrayList<Block> createTopCross() {
     ArrayList<Block> rval = new ArrayList<Block>();
@@ -301,6 +314,9 @@ class Cube {
     case 'e':
       turn(direction, this.edge);
       break;
+    case 's':
+      turn(direction, this.slice);
+      break;
     default:
       println("ERROR, direction is not valid");
     }
@@ -311,7 +327,7 @@ class Cube {
     for (int i = 0; i < list.size()-1; i++) {
       temp.add(list.get(i).clone());
     }
-    println(direction);
+    //println(direction);
     if (!Character.isUpperCase(direction)) {
       //println("Clockwise");
       temp.add(0, temp.pollLast());
@@ -471,6 +487,22 @@ class Cube {
     rotateY(radians);
     for (int i = 0; i < edge.size(); i++) {
       edge.get(i).display();
+    }
+    popMatrix();
+  }
+  
+  void rotateCubeSlice(float radians) {
+    for (int i = 0; i < 3; i+=2) {
+      for (int j = 0; j < 3; j++) {
+        for (int k = 0; k < 3; k++) {
+          cube[i][j][k].display();
+        }
+      }
+    }
+    pushMatrix();
+    rotateZ(radians);
+    for (int i = 0; i < slice.size(); i++) {
+      slice.get(i).display();
     }
     popMatrix();
   }

@@ -32,7 +32,7 @@ void setup() {
   rotationDegree = 0;
   rotateAnimation = false;
   animationDirection = '-';
-  rotationSpeed = radians(20);
+  rotationSpeed = radians(100); //was 30
   strokeWeight(7);
   sequence = new LinkedList<Character>();
   randomizeCube(50);
@@ -261,6 +261,30 @@ void draw() {
       animationDirection = '-';
     }
     break;
+  case 's':
+    if (rotationDegree < PI/2) {
+      cube.rotateCubeSlice(rotationDegree);
+      rotationDegree += rotationSpeed;
+    } else {
+      cube.turn('s');
+      rotationDegree = 0;
+      cube.display();
+      rotateAnimation = false;
+      animationDirection = '-';
+    }
+    break;
+  case 'S':
+    if (rotationDegree > -PI/2) {
+      cube.rotateCubeSlice(rotationDegree);
+      rotationDegree -= rotationSpeed;
+    } else {
+      cube.turn('S');
+      rotationDegree = 0;
+      cube.display();
+      rotateAnimation = false;
+      animationDirection = '-';
+    }
+    break;
   case 'x':
     if (rotationDegree < PI/2) {
       cube.rotateVertical(rotationDegree);
@@ -314,8 +338,7 @@ void draw() {
     if (sequence.size() > 0) {
       turnSide(sequence.pollFirst());
     } else {
-      rotationSpeed = radians(5); //was 10
-      //println(solver.checkWhiteCross());
+      rotationSpeed = radians(8); //was 8
     }
   }
 
@@ -329,6 +352,7 @@ void keyPressed() {
 }
 
 void turnSide(char key) {
+  println(key);
   if (key == '/') {
     if (locked) {
       locked = false;
@@ -383,6 +407,12 @@ void turnSide(char key) {
   } else if (key == 'E') {
     rotateAnimation = true;
     animationDirection = 'E';
+  } else if (key == 's') {
+    rotateAnimation = true;
+    animationDirection = 's';
+  } else if (key == 'S') {
+    rotateAnimation = true;
+    animationDirection = 'S';
   } else if (keyCode == RIGHT || key == 'Y') {
     rotateAnimation = true;
     animationDirection = 'Y';
@@ -475,6 +505,19 @@ void solveCube() {
     break;
   case 1: 
     firstTwoLayers();
+    break;
+  case 2: 
+    orientEdges();
+    break;
+  case 3:
+    println("orient corners");
+    int numCornersYellowUp = 0;
+    for (int i = 0; i < cube.topCorners.size(); i++) {
+      if (cube.topCorners.get(i).getTop() == YELLOW) {
+        numCornersYellowUp++;
+      }
+    }
+    orientCorners(numCornersYellowUp);
     break;
   }
 }
@@ -601,6 +644,7 @@ void firstTwoLayers() {
             addToSequence(new LinkedList<Character>(Arrays.asList('y', ' ')));
           } else {
             solveStep++;
+            //addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
           }
           return;
         } else {
@@ -1033,5 +1077,165 @@ void firstTwoLayers() {
         return;
       }
     }
+  }
+}
+
+void orientEdges() {
+  Block curr;
+  for (int i = 0; i < cube.topCross.size(); i++) {
+    curr = cube.topCross.get(i);
+    if (curr.getTop() == YELLOW) { //TF edge has yellow on top
+      if (cube.topCross.get(Math.floorMod(i-1, 4)).getTop() == YELLOW && cube.topCross.get(Math.floorMod(i+1, 4)).getTop() != YELLOW) { //starting in L position
+        addToSequence(CA.orientEdgesL());
+        break;
+      } else if (cube.topCross.get(Math.floorMod(i+1, 4)).getTop() == YELLOW && cube.topCross.get(Math.floorMod(i-1, 4)).getTop() != YELLOW) {
+        addToSequence(new LinkedList<Character>(Arrays.asList('Y')));
+        addToSequence(CA.orientEdgesL());
+        break;
+      } else if (cube.topCross.get(Math.floorMod(i+2, 4)).getTop() == YELLOW && cube.topCross.get(Math.floorMod(i-1, 4)).getTop() != YELLOW) {
+        addToSequence(new LinkedList<Character>(Arrays.asList('Y')));
+        addToSequence(CA.orientEdgesBar());
+        break;
+      }
+    } else {
+      addToSequence(new LinkedList<Character>(Arrays.asList('Y')));
+    }
+    if (i == 3 && cube.topCross.get(0).getTop() != YELLOW) {
+      addToSequence(CA.orientEdgesAll());
+    }
+  }
+  solveStep++;
+  addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+}
+
+void orientCorners(int numCornersYellowUp) { 
+  switch(numCornersYellowUp) {
+  case 0: //Pi or H posisitions
+    if (cube.topCorners.get(0).getFront() == YELLOW && cube.topCorners.get(2).getBack() == YELLOW) { //standard H position
+      addToSequence(CA.orientCornersH());
+    } else if (cube.topCorners.get(0).getFront() != YELLOW && cube.topCorners.get(2).getBack() != YELLOW) { //rotated H position
+      addToSequence(new LinkedList<Character>(Arrays.asList('Y')));
+      addToSequence(CA.orientCornersH());
+    } else { //it is in a Pi position
+      if (cube.topCorners.get(0).getFront() == YELLOW) {
+        if (cube.topCorners.get(3).getBack() == YELLOW) { //standard Pi position
+          addToSequence(CA.orientCornersPi());
+        } else if (cube.topCorners.get(3).getRight() == YELLOW) { //Y rotated pi position
+          addToSequence(new LinkedList<Character>(Arrays.asList('y')));
+          addToSequence(CA.orientCornersPi());
+        }
+      } else if (cube.topCorners.get(0).getRight() == YELLOW) {
+        if (cube.topCorners.get(3).getBack() == YELLOW) { //y rotated Pi position
+          addToSequence(new LinkedList<Character>(Arrays.asList('y')));
+          addToSequence(CA.orientCornersPi());
+        } else if (cube.topCorners.get(3).getRight() == YELLOW) { //Y2 rotated pi position
+          addToSequence(new LinkedList<Character>(Arrays.asList('y')));
+          addToSequence(new LinkedList<Character>(Arrays.asList('y')));
+          addToSequence(CA.orientCornersPi());
+        }
+      } else { //this shouldn't ever happen
+        println("Error, orient corners case 0");
+      }
+    }
+    break;
+  case 1: //Sune or Antisune
+    int location = 0;
+    for (int i = 0; i < cube.topCorners.size(); i++) {
+      if (cube.topCorners.get(i).getTop() == YELLOW) {
+        location = i;
+        break;
+      }
+    }
+    switch (location) {
+    case 0: // "special case" (just checking a different corner to determine sune vs antisune
+      if (cube.topCorners.get(1).getLeft() == YELLOW) { //Y rotated sune
+        addToSequence(new LinkedList<Character>(Arrays.asList('y')));
+        addToSequence(CA.orientCornersSune());
+      } else { //y rotated antisune
+        addToSequence(new LinkedList<Character>(Arrays.asList('Y')));
+        addToSequence(CA.orientCornersAntisune());
+      }
+      break;
+    case 1: 
+      if (cube.topCorners.get(0).getFront() == YELLOW) { //standard sune
+        addToSequence(CA.orientCornersSune());
+      } else { //Y2 rotated antisune
+        addToSequence(new LinkedList<Character>(Arrays.asList('y', 'y')));
+        addToSequence(CA.orientCornersAntisune());
+      }
+      break;
+    case 2:
+      if (cube.topCorners.get(0).getFront() == YELLOW) { //y rotated sune
+        addToSequence(new LinkedList<Character>(Arrays.asList('Y')));
+        addToSequence(CA.orientCornersSune());
+      } else { //Y rotated antisune
+        addToSequence(new LinkedList<Character>(Arrays.asList('y')));
+        addToSequence(CA.orientCornersAntisune());
+      }
+      break;
+    case 3:
+      if (cube.topCorners.get(0).getFront() == YELLOW) { //Y2 rotated sune
+        addToSequence(new LinkedList<Character>(Arrays.asList('y', 'y')));
+        addToSequence(CA.orientCornersSune());
+      } else { //stardard antisune
+        addToSequence(CA.orientCornersAntisune());
+      }
+      break;
+    }
+    break;
+  case 2: //Headlights, T, bowtie
+    println("case 2");
+    if (cube.topCorners.get(0).getTop() == YELLOW && cube.topCorners.get(2).getTop() == YELLOW) { //bowtie position
+      if (cube.topCorners.get(3).getRight() == YELLOW) { //standard bowtie position
+        addToSequence(CA.orientCornersBowtie());
+      } else { //Y2 rotated position
+        addToSequence(new LinkedList<Character>(Arrays.asList('y', 'y')));
+        addToSequence(CA.orientCornersBowtie());
+      }
+    } else if (cube.topCorners.get(0).getTop() != YELLOW && cube.topCorners.get(2).getTop() != YELLOW) { //rotated bowtie position
+      if (cube.topCorners.get(2).getLeft() == YELLOW) { //y rotated bowtie position
+        addToSequence(new LinkedList<Character>(Arrays.asList('Y')));
+        addToSequence(CA.orientCornersBowtie());
+      } else { //Y rotated bowtie position
+        addToSequence(new LinkedList<Character>(Arrays.asList('y')));
+        addToSequence(CA.orientCornersBowtie());
+      }
+    } else { //either headlights or T position
+      if (cube.topCorners.get(0).getTop() != YELLOW && cube.topCorners.get(1).getTop() != YELLOW) { //standard headlights or y rotated T position
+        if (cube.topCorners.get(0).getFront() == YELLOW) { //standard headlights
+          addToSequence(CA.orientCornersHeadlights());
+        } else { //y rotated T position
+          addToSequence(new LinkedList<Character>(Arrays.asList('Y')));
+          addToSequence(CA.orientCornersT());
+        }
+      } else if (cube.topCorners.get(1).getTop() != YELLOW && cube.topCorners.get(2).getTop() != YELLOW) { //y rotated headlights or Y2 T position
+        if (cube.topCorners.get(1).getLeft() == YELLOW) { //y rotated headlights
+          addToSequence(new LinkedList<Character>(Arrays.asList('Y')));
+          addToSequence(CA.orientCornersHeadlights());
+        } else { //Y2 rotated T position
+          addToSequence(new LinkedList<Character>(Arrays.asList('y', 'y')));
+          addToSequence(CA.orientCornersT());
+        }
+      } else if (cube.topCorners.get(2).getTop() != YELLOW && cube.topCorners.get(3).getTop() != YELLOW) { //Y2 rotated headlights or Y rotated T position
+        if (cube.topCorners.get(2).getBack() == YELLOW) { //Y2 rotated headlights
+          addToSequence(new LinkedList<Character>(Arrays.asList('y', 'y')));
+          addToSequence(CA.orientCornersHeadlights());
+        } else { //Y rotated T position
+          addToSequence(new LinkedList<Character>(Arrays.asList('y')));
+          addToSequence(CA.orientCornersT());
+        }
+      } else if (cube.topCorners.get(3).getTop() != YELLOW && cube.topCorners.get(0).getTop() != YELLOW) { //Y rotated headlights or standard T position
+        if (cube.topCorners.get(3).getRight() == YELLOW) { //Y rotated headlights
+          addToSequence(new LinkedList<Character>(Arrays.asList('y')));
+          addToSequence(CA.orientCornersHeadlights());
+        } else { //standard T position
+          addToSequence(CA.orientCornersT());
+        }
+      }
+    }
+    break;
+  case 4: //already correctly oriented
+    println("Already all oriented correctly");
+    break;
   }
 }
