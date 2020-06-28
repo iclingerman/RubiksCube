@@ -15,7 +15,7 @@ Shift + key - turn counter-clockwise
 # Pictures  
 **A Solved Cube:**   
 <img src = "https://user-images.githubusercontent.com/42256437/85937699-ff027380-b8ba-11ea-9c44-05ff957eaee9.PNG" height="400"/>  
-**A Scrammbled Cube:**  
+**A Scrambled Cube:**  
 <img src = "https://user-images.githubusercontent.com/42256437/85937697-fd38b000-b8ba-11ea-923c-c6710c48e8e2.PNG" height="400"/>  
 **A Cube Being Solved:**  
 <img src = "https://user-images.githubusercontent.com/42256437/85937700-00cc3700-b8bb-11ea-8183-032b9250091b.PNG" height="400"/>
