@@ -602,6 +602,31 @@ class CubeAlgorithms {
     return new LinkedList<Character>(Arrays.asList('r', 'u', 'u', 'R', 'U', 'r', 'u', 'R', 'U', 'r', 'U', 'R'));
   }
   
+  LinkedList<Character> permutateEdgesUPerm() {
+    return new LinkedList<Character>(Arrays.asList('r', 'U', 'r', 'u', 'r', 'u', 'r', 'U', 'R', 'U', 'r', 'r'));
+  }
   
+  LinkedList<Character> permutateEdgesInverseUPerm() {
+    return new LinkedList<Character>(Arrays.asList('r', 'r', 'u', 'r', 'u', 'R', 'U', 'R', 'U', 'R', 'u', 'R'));
+  }
   
+  LinkedList<Character> permutateEdgesHPerm() {
+    return new LinkedList<Character>(Arrays.asList('M', 'M', 'u', 'M', 'M', 'u', 'u', 'M', 'M', 'u', 'M', 'M'));
+  }
+  
+  LinkedList<Character> permutateEdgesZPerm() {
+    return new LinkedList<Character>(Arrays.asList('M', 'M', 'u', 'M', 'M', 'u', 'M', 'u', 'u', 'M', 'M', 'u', 'u', 'M', 'u', 'u'));
+  }
+  
+  LinkedList<Character> permutateCornersAcross() {
+    return new LinkedList<Character>(Arrays.asList('X', 'r', 'U', 'R', 'd', 'r', 'u', 'R', 'D', 'r', 'u', 'R', 'd', 'r', 'U', 'R', 'D', 'x'));
+  }
+  
+  LinkedList<Character> permutateCornersCycle() {
+    return new LinkedList<Character>(Arrays.asList('x', 'R', 'u', 'R', 'd', 'd', 'r', 'U', 'R', 'd', 'd', 'r', 'r', 'X'));
+  }
+  
+  LinkedList<Character> permutateCornersReverseCycle() {
+    return new LinkedList<Character>(Arrays.asList('x', 'r', 'r', 'd', 'd', 'r', 'u', 'R', 'd', 'd', 'r', 'U', 'r', 'X'));
+  }
 }

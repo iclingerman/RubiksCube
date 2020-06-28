@@ -338,7 +338,7 @@ void draw() {
     if (sequence.size() > 0) {
       turnSide(sequence.pollFirst());
     } else {
-      rotationSpeed = radians(8); //was 8
+      rotationSpeed = radians(12 ); //was 8
     }
   }
 
@@ -519,6 +519,13 @@ void solveCube() {
     }
     orientCorners(numCornersYellowUp);
     break;
+  case 4:
+    permutateEdges();
+    break;
+  case 5:
+    println("permutate corners");
+    permutateCorners();
+    break;
   }
 }
 
@@ -644,7 +651,7 @@ void firstTwoLayers() {
             addToSequence(new LinkedList<Character>(Arrays.asList('y', ' ')));
           } else {
             solveStep++;
-            //addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+            addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
           }
           return;
         } else {
@@ -1237,5 +1244,151 @@ void orientCorners(int numCornersYellowUp) {
   case 4: //already correctly oriented
     println("Already all oriented correctly");
     break;
+  }
+  solveStep++;
+  addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+}
+
+void permutateEdges() { //perhaps change this to eariler where it checks how many match off of the bat and does a switch statement based on that (like above)
+  color front = cube.getBlock("011").getFront();
+  color left = cube.getBlock("110").getLeft();
+  color back = cube.getBlock("211").getBack();
+  color right = cube.getBlock("112").getRight();
+
+  if  ((cube.topCross.get(0).getFront() == back && cube.topCross.get(2).getBack() == front) && (cube.topCross.get(1).getLeft() == right && cube.topCross.get(3).getRight() == left)) { //H position, but the algorithm is not needed unless the corners are already in place  
+    if (cube.topCorners.get(0).getFront() == front && cube.topCorners.get(0).getRight() == right) { //checking three of the corners for correct orientation (split into 3 if statement for readablility)
+      if (cube.topCorners.get(1).getFront() == front && cube.topCorners.get(1).getLeft() == left) {
+        if (cube.topCorners.get(2).getBack() == back && cube.topCorners.get(2).getLeft() == left) { //only need to check for 3 of the corners since if 3 are correct, the last one must be as well
+          addToSequence(CA.permutateEdgesHPerm());
+          return; //cube is solved
+        }
+      }
+    }
+    addToSequence(new LinkedList<Character>(Arrays.asList('u', 'u')));
+  } else if ((cube.topCross.get(0).getFront() == right && cube.topCross.get(3).getRight() == front) && (cube.topCross.get(1).getLeft() == back && cube.topCross.get(2).getBack() == left)) { //standard Z perm
+    addToSequence(CA.permutateEdgesZPerm());
+  } else if ((cube.topCross.get(0).getFront() == front && cube.topCross.get(2).getBack() == back) && cube.topCross.get(1).getLeft() != left) { //u rotated z perm
+    addToSequence(new LinkedList<Character>(Arrays.asList('U')));
+    addToSequence(CA.permutateEdgesZPerm());
+  } else if ((cube.topCross.get(0).getFront() == left && cube.topCross.get(1).getLeft() == front) && (cube.topCross.get(2).getBack() == right && cube.topCross.get(3).getRight() == back)) { //U2 rotated Z perm
+    addToSequence(new LinkedList<Character>(Arrays.asList('u', 'u')));
+    addToSequence(CA.permutateEdgesZPerm());
+  } else if ((cube.topCross.get(3).getRight() == right && cube.topCross.get(1).getLeft() == left) && cube.topCross.get(0).getFront() != front) { //U rotated z perm
+    addToSequence(new LinkedList<Character>(Arrays.asList('u')));
+    addToSequence(CA.permutateEdgesZPerm());
+  } else { //one of the U perms
+    println("one of the U permutations");
+    for (int i = 0; i < cube.topCross.size(); i++) {
+      Block curr = cube.topCross.get(i);
+      switch(i) {
+      case 0:
+        if (curr.getFront() == front) {
+          if (cube.topCross.get(1).getLeft() == left || cube.topCross.get(3).getRight() == right) { //definatly a better way to do this, this will most likely lead to a way to run the alg
+            addToSequence(new LinkedList<Character>(Arrays.asList('u', ' ')));
+            return;
+          } else if (cube.topCross.get(1).getLeft() == right) {
+            addToSequence(new LinkedList<Character>(Arrays.asList('y', 'y')));
+            addToSequence(CA.permutateEdgesUPerm());
+          } else if (cube.topCross.get(3).getRight() == left) {
+            addToSequence(new LinkedList<Character>(Arrays.asList('y', 'y')));
+            addToSequence(CA.permutateEdgesInverseUPerm());
+          }
+        } else {
+          continue;
+        }
+        break;
+      case 1:
+        if (curr.getLeft() == left) {
+          if (cube.topCross.get(0).getFront() == front || cube.topCross.get(2).getBack() == back) { 
+            addToSequence(new LinkedList<Character>(Arrays.asList('u', ' ')));
+            return;
+          } else if (cube.topCross.get(2).getBack() == front) {
+            addToSequence(new LinkedList<Character>(Arrays.asList('y')));
+            addToSequence(CA.permutateEdgesUPerm());
+          } else if (cube.topCross.get(0).getFront() == back) {
+            addToSequence(new LinkedList<Character>(Arrays.asList('y')));
+            addToSequence(CA.permutateEdgesInverseUPerm());
+          }
+        } else {
+          continue;
+        }
+        break;
+      case 2:
+        if (curr.getBack() == back) {
+          if (cube.topCross.get(1).getLeft() == left || cube.topCross.get(3).getRight() == right) { 
+            addToSequence(new LinkedList<Character>(Arrays.asList('u', ' ')));
+            return;
+          } else if (cube.topCross.get(3).getRight() == left) {
+            addToSequence(CA.permutateEdgesUPerm());
+          } else if (cube.topCross.get(1).getLeft() == right) {
+            addToSequence(CA.permutateEdgesInverseUPerm());
+          }
+        } else {
+          continue;
+        }
+        break;
+      case 3:
+        if (curr.getRight() == right) {
+          if (cube.topCross.get(0).getFront() == front || cube.topCross.get(2).getBack() == back) { 
+            addToSequence(new LinkedList<Character>(Arrays.asList('u', ' ')));
+            return;
+          } else if (cube.topCross.get(0).getFront() == back) {
+            addToSequence(new LinkedList<Character>(Arrays.asList('Y')));
+            addToSequence(CA.permutateEdgesUPerm());
+          } else if (cube.topCross.get(2).getBack() == front) {
+            addToSequence(new LinkedList<Character>(Arrays.asList('Y')));
+            addToSequence(CA.permutateEdgesInverseUPerm());
+          }
+        } else {
+          addToSequence(new LinkedList<Character>(Arrays.asList('u', ' ')));
+          return;
+        }
+        break;
+      }
+      break; //maybe to end the for loop and use continues in the switch statement
+    }
+  }
+  solveStep++;
+  addToSequence(new LinkedList<Character>(Arrays.asList(' ')));
+}
+
+void permutateCorners() {
+  color front = cube.getBlock("011").getFront();
+  color left = cube.getBlock("110").getLeft();
+  color back = cube.getBlock("211").getBack();
+  color right = cube.getBlock("112").getRight();
+  if(cube.topCorners.get(0).getFront() == front && cube.topCorners.get(0).getRight() == right && cube.topCorners.get(2).getLeft() == left && cube.topCorners.get(2).getBack() == back) {
+    return; //the cube is solved
+  } else  if ((cube.topCorners.get(0).getFront() == right && cube.topCorners.get(0).getRight() == back) && (cube.topCorners.get(1).getFront() == left && cube.topCorners.get(1).getLeft() == back)) { //corners across
+    println("E permutation");
+    addToSequence(CA.permutateCornersAcross());
+  } else if ((cube.topCorners.get(0).getFront() == left && cube.topCorners.get(0).getRight() == front) && (cube.topCorners.get(1).getFront() == right && cube.topCorners.get(1).getLeft() == front)) { //y rotated corners across
+    addToSequence(new LinkedList<Character>(Arrays.asList('y')));
+    addToSequence(CA.permutateCornersAcross());
+  } else if (cube.topCorners.get(0).getFront() == back && cube.topCorners.get(0).getRight() == left && cube.topCorners.get(2).getLeft() == right && cube.topCorners.get(2).getBack() == front) { 
+    //this one will be the weird U2 and then the permutate edges across
+    addToSequence(new LinkedList<Character>(Arrays.asList('u', 'u')));
+    addToSequence(CA.permutateEdgesHPerm());
+  } else {
+    //get in place for a 3 corner cycle then "recall" the function
+    Block frontCorner = cube.topCorners.get(0); // the block that will be in the front corner after the rotation of the cube to get the corrected edge in the front left
+    if (cube.topCorners.get(0).getFront() == front && cube.topCorners.get(0).getRight() == right) {
+      addToSequence(new LinkedList<Character>(Arrays.asList('y', ' ')));
+      return;
+    } else if (cube.topCorners.get(2).getLeft() == left && cube.topCorners.get(2).getBack() == back) {
+      addToSequence(new LinkedList<Character>(Arrays.asList('Y', ' ')));
+      return;
+    } else if (cube.topCorners.get(3).getBack() == back && cube.topCorners.get(3).getRight() == right) {
+      addToSequence(new LinkedList<Character>(Arrays.asList('y', 'y', ' ')));
+      return;
+    }
+    //select regular or reverse 3 corner cycle
+    if (frontCorner.getFront() == back && cube.topCorners.get(0).getRight() == left) {
+      addToSequence(CA.permutateCornersCycle());
+    } else if (cube.topCorners.get(0).getFront() == right && cube.topCorners.get(0).getRight() == back) {
+      addToSequence(CA.permutateCornersReverseCycle());
+    } else {
+      println("ERROR in cycle corner permutation");
+    }
   }
 }

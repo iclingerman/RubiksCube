@@ -12,7 +12,7 @@ Shift + key - turn counter-clockwise
 / - unlock free rotation  
 0 - reset the cube
 
-# Updates 
+# Development Log
 3/21/2020:   
 The cube supports animated rotations for the right, left, top, bottom, front, and back sides of the cube. The default position of the cube is showing the red face as the front and showing 3 sides of the cube. Free rotation can be activated to rotate the cube with the mouse. 
 
@@ -26,4 +26,7 @@ After the cube is created, it selects 50 random moves to randomize itself. By pr
 The cube is now able to solve the first two layers of the rubiks using the CFOP F2L algorithms in most cases of the cube, there are some unlikely outliers not currently addressed. In addition, the method of determining the correct F2L algorithm is rather complication and will mostly likely be simplified in the future. 
 
 6/15/2020:   
-The cube now solves all the way up to through the OLL stop of the 2 look CFOP method. Several bugs still exist occasionally in the solving of the cube to be fixed later. 
+The cube now solves all the way up to through the OLL stop of the 2 look CFOP method. Several bugs still exist occasionally in the solving of the cube to be fixed later.
+
+6/27/2020:   
+The cube is now able to solve the cube all the way through the majority of the time, several remaining bugs exist (mostly during the F2L solve step). 
